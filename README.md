@@ -6,7 +6,7 @@ This is a suggestion challenge for the 2018 Clamart Hackathon
 The goal for this challenge is to refactor the code so that it **no longer contains branching instruction** (if/then/else, tertiary operator, etc), while still passing the unit test suite.
 
 The [cyclomatic complexity](https://en.wikipedia.org/wiki/Cyclomatic_complexity) should be equal to 1 for every method.
-The current stat of the metrics, as per Visual Studio 2017, is as follow:
+The current state of the metrics, as per Visual Studio 2017, is as follow:
 
 | Member                 | Cyclomatic Complexity| Lines of Code
 |------------------------|----------------------|--------------
