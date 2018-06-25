@@ -8,19 +8,29 @@ namespace AccountTests
 	[ExcludeFromCodeCoverage]
     public class AccountTests
     {
-	    [Fact]
+	    private static IAccount CreatetNewAccount()
+	    {
+		    return new Account(() => { });
+	    }
+
+	    private static IAccount CreateNewAccountWithCustomUnfreezeAction(Action unfreezeAction)
+	    {
+		    return new Account(unfreezeAction);
+	    }
+
+		[Fact]
 	    public void NewAccount_ShouldHaveBalanceEqualToZero()
 	    {
-		    IAccount newAccount = new Account(() => { });
+		    IAccount newAccount = CreatetNewAccount();
 
 		    Assert.Equal(0, newAccount.Balance);
 	    }
 
-		[Fact]
+	    [Fact]
 	    public void Calling_Deposit_OnUnverifiedAccount_ShouldAddDepositedAmountToBalance()
 		{
 			const decimal amountToDeposit = 5;
-			IAccount unverifiedAccount = new Account(() => { });
+			IAccount unverifiedAccount = CreatetNewAccount();
 
 			unverifiedAccount.Deposit(amountToDeposit);
 
@@ -30,7 +40,7 @@ namespace AccountTests
 	    [Fact]
 	    public void Calling_Withdraw_OnUnverifiedAccount_ShouldNotChangeBalance()
 	    {
-		    IAccount unverifiedAccount = new Account(() => { });
+		    IAccount unverifiedAccount = CreatetNewAccount();
 
 			unverifiedAccount.Withdraw(5);
 
@@ -40,7 +50,7 @@ namespace AccountTests
 	    [Fact]
 	    public void Calling_Deposit_OnClosedAccount_ShouldNotChangeBalance()
 	    {
-		    IAccount closedAccount = new Account(() => { });
+		    IAccount closedAccount = CreatetNewAccount();
 			closedAccount.Close();
 
 			closedAccount.Deposit(5);
@@ -51,8 +61,8 @@ namespace AccountTests
 	    [Fact]
 	    public void Calling_Withdraw_OnClosedAccount_ShouldNotChangeBalance()
 	    {
-		    IAccount closedAccount = new Account(() => { });
-		    closedAccount.Close();
+		    IAccount closedAccount = CreatetNewAccount();
+			closedAccount.Close();
 
 			closedAccount.Deposit(5);
 
@@ -64,7 +74,7 @@ namespace AccountTests
 	    [InlineData(10, -10)]
 	    public void Calling_Withdraw_OnVerifiedAccount_ShouldSubtractWithdrawnAmountFromBalance(decimal amountToWithdraw, decimal resultingBalance)
 	    {
-		    IAccount account = new Account(() => { });
+		    IAccount account = CreatetNewAccount();
 			account.VerifyHolder();
 
 			account.Withdraw(amountToWithdraw);
@@ -77,8 +87,8 @@ namespace AccountTests
 	    [InlineData(10, 10)]
 	    public void Calling_Deposit_OnVerifiedAccount_ShouldAddDepositedAmountToBalance(decimal amountToDeposit, decimal resultingBalance)
 	    {
-		    IAccount account = new Account(() => { });
-		    account.VerifyHolder();
+		    IAccount account = CreatetNewAccount();
+			account.VerifyHolder();
 
 			account.Deposit(amountToDeposit);
 
@@ -90,7 +100,7 @@ namespace AccountTests
 	    {
 		    var wasCustomActionCalled = false;
 		    Action customAction = () => wasCustomActionCalled = true;
-		    IAccount account = new Account(customAction);
+		    IAccount account = CreateNewAccountWithCustomUnfreezeAction(customAction);
 		    account.VerifyHolder();
 			account.Freeze();
 
@@ -104,7 +114,7 @@ namespace AccountTests
 	    {
 		    var wasCustomActionCalled = false;
 		    Action customAction = () => wasCustomActionCalled = true;
-		    IAccount account = new Account(customAction);
+		    IAccount account = CreateNewAccountWithCustomUnfreezeAction(customAction);
 		    account.VerifyHolder();
 			account.Freeze();
 
@@ -118,7 +128,7 @@ namespace AccountTests
 	    {
 		    var wasCustomActionCalled = false;
 		    Action customAction = () => wasCustomActionCalled = true;
-		    IAccount account = new Account(customAction);
+		    IAccount account = CreateNewAccountWithCustomUnfreezeAction(customAction);
 		    account.VerifyHolder();
 		    
 		    account.Deposit(5);
@@ -131,7 +141,7 @@ namespace AccountTests
 	    {
 		    var wasCustomActionCalled = false;
 		    Action customAction = () => wasCustomActionCalled = true;
-		    IAccount account = new Account(customAction);
+		    IAccount account = CreateNewAccountWithCustomUnfreezeAction(customAction);
 		    account.VerifyHolder();
 		    
 		    account.Withdraw(5);
